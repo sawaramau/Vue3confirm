@@ -1,24 +1,19 @@
-# confirm
+# Confirm dialog for Vue3
 
-## Project setup
-```
-npm install
-```
+# Usage
+```javascript: sample.vue
+import confirm from "./confirm.js";
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
+export default {
+    mixins:[confirm],
+    methods: {
+        process: async function() {
+            const confirm = await this.confirm({message: 'test message.'});
+            if(confirm) {
+                console.log('confirm ok.');
+            }
+        }
+    }
+}
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
