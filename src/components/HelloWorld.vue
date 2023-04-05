@@ -1,40 +1,58 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <button @click="process">confirm</button>
+    <button @click="select">select</button>
+    <button @click="multi">multi</button>
   </div>
 </template>
 
 <script>
+import confirm from "./lib/confirm.js";
+
 export default {
   name: 'HelloWorld',
+  mixins:[confirm],
   props: {
     msg: String
+  },
+  methods: {
+    process: async function() {
+      const confirm = await this.confirm({title: "Dialog title1", message: "You can specify button message.\nAnd you can use new line in message.", yes:'OK', no:'NO', cancel:'CANCEL'})
+      if(confirm === true) {
+        console.log('confirm yes return true');
+      } else if(confirm === false) {
+        console.log('confirm no return false');
+      } else {
+        console.log('confirm cancel return undefined');
+      }
+    },
+    select: async function() {
+      const selected = await this.confirm({title: "Dialog title2", message:["You can", "use array strings", "in message."], options: [1, {label: 2, value: -2}, 3]})
+      if(selected) {
+        console.log('select return', selected);
+      } else if(selected === false) {
+        console.log('confirm no return false');
+      } else {
+        console.log('confirm cancel return undefined');
+      }
+    },
+    multi: async function() {
+      const selected = await this.confirm({title: "Dialog title3", 
+        message: [
+          "You can specify the buttons order and types(yes/no/cancel/blank).", 
+          "And if a cancel button is NOT included, users must select button yes or no for closing dialog.",
+          "(If a cancel button is included, users can close the dialog by clicking outside the dialog.)"
+        ], 
+        options: [1, 2, 3], multiple: true, buttons:['blank', 'no', 'yes']
+      })
+      if(selected) {
+        console.log('select return', selected);
+      } else if(selected === false) {
+        console.log('confirm no return false');
+      } else {
+        console.log('confirm cancel return undefined');
+      }
+    },
   }
 }
 </script>
